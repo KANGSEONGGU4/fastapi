@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px; /* 변경된 부분: 가로 길이를 늘림 */
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%; /* 변경된 부분: 테이블 가로 길이를 100%로 지정 */
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #28a745;
+            color: #fff;
+            font-weight: bold;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button {
+            margin-top: 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* 변경된 부분: 테이블의 선을 없애는 스타일 */
+        table th:first-child,
+        table td:first-child {
+            border-left: none;
+        }
+        table th:last-child,
+        table td:last-child {
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성일시</th>
+            </tr>
+            {% for question in question_list|sort(attribute='id', reverse=false) %}
+                <tr>
+                    <td>{{ question.id }}</td>
+                    <td><a href="/api/question/detail/{{ question.id }}">{{ question.subject }}</a></td>
+                    <td>{{ question.create_date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button onclick="redirectToCreateSite()">질문 등록</button>
+    </div>
+    <script>
+        function redirectToCreateSite() {
+            window.location.href = "/api/question/create_site";
+        }
+    </script>
+</body>
+</html>

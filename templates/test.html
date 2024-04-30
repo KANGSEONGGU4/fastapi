@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Subtract border and padding width */
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            resize: none;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .create-date {
+            font-size: 14px;
+            color: #666;
+        }
+        .answer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;    
+        }
+        .question-content {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h5 {
+            text-align: right;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h5 ><a href= "/api/question/list" >홈으로</a></h5>
+        <h1>{{ text.subject }}</h1>
+        <div class="question-content">
+            <span>{{ text.content }}</span>
+            <span class="create-date">{{ text.create_date }}</span>
+        </div>
+        {% set answer_count = text.answers|length %}
+        <h2>{{ answer_count }}개의 답변이 있습니다</h2>
+
+        <ul>
+            {% for item in text.answers %}
+                <li>
+                    <div class="answer-content">
+                        <span>{{ item.content }}</span>
+                        <span class="create-date">{{ item.create_date }}</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <form>
+            <textarea id="content" name="content" rows="6" placeholder="Your Answer"></textarea>
+            <button type="button" onclick="submitForm()">등록</button>
+        </form>
+    </div>
+
+    <script>
+        function submitForm() {
+            var content = document.getElementById("content").value;
+
+            if (!content.trim()) {
+                alert("답변을 입력해주세요.");
+                return;
+            }
+
+            var data = {
+                "content": content
+            };
+
+            var jsonData = JSON.stringify(data);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/answer/create/{{ text.id }}", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    window.location.reload();
+                }
+            };
+            xhr.send(jsonData);
+        }
+    </script>
+</body>
+</html>
