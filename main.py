@@ -1,5 +1,10 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
+
+from domain.question import question_router
+from domain.answer import answer_router
 
 app = FastAPI()
-app.mount("/", StaticFiles(directory="public", html = True), name="static")
+
+# include_router로 라우터 추가
+app.include_router(question_router.router)
+app.include_router(answer_router.router)
